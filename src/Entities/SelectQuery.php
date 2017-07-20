@@ -17,7 +17,7 @@ class SelectQuery
     /**
      * @var int
      */
-    private $rows = 0;
+    private $rows = null;
 
     /**
      * @var array
