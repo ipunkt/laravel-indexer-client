@@ -41,6 +41,28 @@ abstract class Resource
     abstract protected function url($baseUrl);
 
     /**
+     * returns an resource index via get
+     *
+     * @param array $queryParams
+     * @param array $headers
+     * @return \Guzzle\Http\Message\Response
+     * @throws \Guzzle\Http\Exception\RequestException
+     */
+    protected function _index(array $queryParams = array(), array $headers = array())
+    {
+        $queryString = http_build_query($queryParams);
+        if ($queryString !== '') {
+            $queryString = '?' . $queryString;
+        }
+
+        $request = $this->client->get(
+            $this->url($this->baseUrl) . $queryString,
+            $this->prepareHeaders($headers)
+        );
+        return $request->send();
+    }
+
+    /**
      * posts a message
      *
      * @param array $data

@@ -4,6 +4,7 @@ namespace Ipunkt\LaravelIndexer\Client;
 
 use Guzzle\Http\ClientInterface;
 use Ipunkt\LaravelIndexer\Client\Resources\IndexResource;
+use Ipunkt\LaravelIndexer\Client\Resources\SelectResource;
 
 class IndexerClient
 {
@@ -26,6 +27,11 @@ class IndexerClient
      * @var IndexResource
      */
     private $indexResource = null;
+
+    /**
+     * @var SelectResource
+     */
+    private $selectResource = null;
 
     /**
      * IndexerClient constructor.
@@ -81,6 +87,20 @@ class IndexerClient
         }
 
         return $this->indexResource;
+    }
+
+    /**
+     * returns select resource
+     *
+     * @return SelectResource
+     */
+    public function select()
+    {
+        if ($this->selectResource === null) {
+            $this->selectResource = new SelectResource($this->client(), $this->host, $this->headers);
+        }
+
+        return $this->selectResource;
     }
 
     /**
