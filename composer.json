@@ -9,7 +9,10 @@
 	"autoload": {
 		"psr-4": {
 			"Ipunkt\\LaravelIndexer\\Client\\": "src/"
-		}
+		},
+		"files": [
+			"src/helpers.php"
+		]
 	},
 	"license": "MIT",
 	"authors": [
