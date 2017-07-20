@@ -37,13 +37,16 @@ class IndexerClient
      * IndexerClient constructor.
      * @param string $host
      * @param ClientInterface $client
+     * @param string $token
      */
-    public function __construct($host, ClientInterface $client)
+    public function __construct($host, ClientInterface $client, $token)
     {
         $this->client = $client;
         $this->client->setBaseUrl($host);
 
         $this->host = rtrim($host, '/') . '/';
+
+        $this->setSecretToken($token);
     }
 
     /**
@@ -52,7 +55,7 @@ class IndexerClient
      * @param string $token
      * @return $this
      */
-    public function setSecretToken($token)
+    private function setSecretToken($token)
     {
         if (isset($this->headers['Authorization'])) {
             unset($this->headers['Authorization']);
