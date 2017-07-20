@@ -37,7 +37,37 @@ class QueryResult
             +array_get($meta, 'pagination.page', 1)
         );
 
-        $this->maxScore = array_get($meta, 'result.max-score', 0.0);
+        $this->maxScore = (float)array_get($meta, 'result.max-score', 0.0);
+    }
+
+    /**
+     * data array, result documents
+     *
+     * @return array
+     */
+    public function documents()
+    {
+        return $this->data;
+    }
+
+    /**
+     * returns pagination
+     *
+     * @return Pagination
+     */
+    public function pagination()
+    {
+        return $this->pagination;
+    }
+
+    /**
+     * returns max score
+     *
+     * @return float
+     */
+    public function maxScore()
+    {
+        return $this->maxScore;
     }
 
     /**
