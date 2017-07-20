@@ -1,7 +1,7 @@
 {
 	"name": "ipunkt/laravel-indexer-client",
 	"description": "A php client for the laravel-indexer-service",
-	"type": "project",
+	"type": "library",
 	"require": {
 		"php": ">=5.3.2",
 		"guzzlehttp/guzzle": "3.7.3"
