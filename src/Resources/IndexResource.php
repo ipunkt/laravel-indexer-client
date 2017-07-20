@@ -53,6 +53,6 @@ class IndexResource extends Resource
      */
     protected function url($baseUrl)
     {
-        return $baseUrl . 'secure/v1/index';
+        return $baseUrl . 'secure/v1/items';
     }
 }
