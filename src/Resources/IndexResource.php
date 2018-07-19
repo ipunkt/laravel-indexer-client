@@ -29,7 +29,7 @@ class IndexResource extends Resource
     /**
      * delete an document by id from index
      *
-     * @param $id
+     * @param int|string $id
      * @return bool
      * @throws \Guzzle\Http\Exception\RequestException
      * @throws ApiResponseException
@@ -37,6 +37,25 @@ class IndexResource extends Resource
     public function delete($id)
     {
         $response = $this->_delete($id);
+
+        if ($response->getStatusCode() === 204) {
+            return true;
+        }
+
+        throw ApiResponseException::fromErrorResponse($response);
+    }
+
+    /**
+     * delete an document by id from index
+     *
+     * @param string $query
+     * @return bool
+     * @throws \Guzzle\Http\Exception\RequestException
+     * @throws ApiResponseException
+     */
+    public function deleteByQuery($query)
+    {
+        $response = $this->_deleteWithQuery($query);
 
         if ($response->getStatusCode() === 204) {
             return true;

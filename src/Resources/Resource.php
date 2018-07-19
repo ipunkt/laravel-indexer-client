@@ -98,6 +98,24 @@ abstract class Resource
     }
 
     /**
+     * deletes a resource by query
+     *
+     * @param string|integer $id
+     * @param array $headers
+     * @return \Guzzle\Http\Message\Response
+     * @throws \Guzzle\Http\Exception\RequestException
+     */
+    protected function _deleteWithQuery($query, array $headers = array())
+    {
+        $request = $this->client->delete(
+            $this->url($this->baseUrl) . '/-',
+            $this->prepareHeaders($headers),
+            $this->prepareBody(array('query' => $query))
+        );
+        return $request->send();
+    }
+
+    /**
      * create request model data
      *
      * @param string $type
