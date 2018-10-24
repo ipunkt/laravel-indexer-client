@@ -21,7 +21,7 @@ class IndexerClient
     /**
      * @var array
      */
-    private $headers = array();
+    private $headers = [];
 
     /**
      * @var IndexResource

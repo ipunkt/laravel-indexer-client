@@ -12,14 +12,13 @@ class IndexResource extends Resource
      * @param array $data
      * @param null $id
      * @return bool
-     * @throws \Guzzle\Http\Exception\RequestException
      * @throws ApiResponseException
      */
     public function store(array $data, $id = null)
     {
         $response = $this->_post($this->createRequestModel('items', $data, $id));
 
-        if ($response->getStatusCode() === 204) {
+        if ($response->status() === 204) {
             return true;
         }
 
@@ -31,14 +30,13 @@ class IndexResource extends Resource
      *
      * @param int|string $id
      * @return bool
-     * @throws \Guzzle\Http\Exception\RequestException
      * @throws ApiResponseException
      */
     public function delete($id)
     {
         $response = $this->_delete($id);
 
-        if ($response->getStatusCode() === 204) {
+        if ($response->status() === 204) {
             return true;
         }
 
@@ -50,14 +48,13 @@ class IndexResource extends Resource
      *
      * @param string $query
      * @return bool
-     * @throws \Guzzle\Http\Exception\RequestException
      * @throws ApiResponseException
      */
     public function deleteByQuery($query)
     {
         $response = $this->_deleteWithQuery($query);
 
-        if ($response->getStatusCode() === 204) {
+        if ($response->status() === 204) {
             return true;
         }
 
@@ -70,7 +67,7 @@ class IndexResource extends Resource
      * @param string $baseUrl
      * @return string
      */
-    protected function url($baseUrl)
+    protected function url($baseUrl): string
     {
         return $baseUrl . 'secure/v1/items';
     }

@@ -2,12 +2,14 @@
 
 namespace Ipunkt\LaravelIndexer\Client\Resources;
 
-use Guzzle\Http\ClientInterface;
+use Rokde\HttpClient\Client;
+use Rokde\HttpClient\Request;
+use Rokde\HttpClient\Response;
 
 abstract class Resource
 {
     /**
-     * @var ClientInterface
+     * @var \Rokde\HttpClient\Client
      */
     private $client;
     /**
@@ -21,11 +23,11 @@ abstract class Resource
 
     /**
      * Resource constructor.
-     * @param ClientInterface $client
+     * @param \Rokde\HttpClient\Client $client
      * @param string $baseUrl
      * @param array $headers
      */
-    public function __construct(ClientInterface $client, $baseUrl, array $headers = array())
+    public function __construct(Client $client, $baseUrl, array $headers = [])
     {
         $this->client = $client;
         $this->baseUrl = $baseUrl;
@@ -38,28 +40,29 @@ abstract class Resource
      * @param string $baseUrl
      * @return string
      */
-    abstract protected function url($baseUrl);
+    abstract protected function url($baseUrl): string;
 
     /**
      * returns an resource index via get
      *
      * @param array $queryParams
      * @param array $headers
-     * @return \Guzzle\Http\Message\Response
-     * @throws \Guzzle\Http\Exception\RequestException
+     * @return \Rokde\HttpClient\Response
      */
-    protected function _index(array $queryParams = array(), array $headers = array())
+    protected function _index(array $queryParams = [], array $headers = []): Response
     {
         $queryString = http_build_query($queryParams);
         if ($queryString !== '') {
             $queryString = '?' . $queryString;
         }
 
-        $request = $this->client->get(
+        $request = new Request(
             $this->url($this->baseUrl) . $queryString,
+            'GET',
             $this->prepareHeaders($headers)
         );
-        return $request->send();
+
+        return $this->client->send($request);
     }
 
     /**
@@ -67,17 +70,18 @@ abstract class Resource
      *
      * @param array $data
      * @param array $headers
-     * @return \Guzzle\Http\Message\Response
-     * @throws \Guzzle\Http\Exception\RequestException
+     * @return \Rokde\HttpClient\Response
      */
-    protected function _post($data, array $headers = array())
+    protected function _post($data, array $headers = []): Response
     {
-        $request = $this->client->post(
+        $request = new Request(
             $this->url($this->baseUrl),
-            $this->prepareHeaders($headers),
-            $this->prepareBody($data)
+            'POST',
+            $this->prepareHeaders($headers)
         );
-        return $request->send();
+        $request->setBody($this->prepareBody($data));
+
+        return $this->client->send($request);
     }
 
     /**
@@ -85,34 +89,36 @@ abstract class Resource
      *
      * @param string|integer $id
      * @param array $headers
-     * @return \Guzzle\Http\Message\Response
-     * @throws \Guzzle\Http\Exception\RequestException
+     * @return \Rokde\HttpClient\Response
      */
-    protected function _delete($id, array $headers = array())
+    protected function _delete($id, array $headers = []): Response
     {
-        $request = $this->client->delete(
+        $request = new Request(
             $this->url($this->baseUrl) . '/' . $id,
+            'DELETE',
             $this->prepareHeaders($headers)
         );
-        return $request->send();
+
+        return $this->client->send($request);
     }
 
     /**
      * deletes a resource by query
      *
-     * @param string|integer $id
+     * @param string $query
      * @param array $headers
-     * @return \Guzzle\Http\Message\Response
-     * @throws \Guzzle\Http\Exception\RequestException
+     * @return \Rokde\HttpClient\Response
      */
-    protected function _deleteWithQuery($query, array $headers = array())
+    protected function _deleteWithQuery($query, array $headers = []): Response
     {
-        $request = $this->client->delete(
+        $request = new Request(
             $this->url($this->baseUrl) . '/-',
-            $this->prepareHeaders($headers),
-            $this->prepareBody(array('query' => $query))
+            'DELETE',
+            $this->prepareHeaders($headers)
         );
-        return $request->send();
+        $request->setBody($this->prepareBody(['query' => $query]));
+
+        return $this->client->send($request);
     }
 
     /**
@@ -123,15 +129,15 @@ abstract class Resource
      * @param string|int|null $id
      * @return array
      */
-    protected function createRequestModel($type, array $data = array(), $id = null)
+    protected function createRequestModel($type, array $data = [], $id = null): array
     {
-        return array(
-            'data' => array(
+        return [
+            'data' => [
                 'id' => $id,
                 'type' => $type,
                 'attributes' => $data,
-            )
-        );
+            ]
+        ];
     }
 
     /**

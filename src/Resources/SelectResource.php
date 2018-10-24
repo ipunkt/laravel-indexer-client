@@ -13,15 +13,13 @@ class SelectResource extends Resource
      *
      * @param SelectQuery $query
      * @return QueryResult
-     * @throws \Guzzle\Common\Exception\RuntimeException
-     * @throws \Guzzle\Http\Exception\RequestException
      * @throws ApiResponseException
      */
     public function get(SelectQuery $query)
     {
         $response = $this->_index($query->toArray());
 
-        if ($response->getStatusCode() === 200) {
+        if ($response->status() === 200) {
             return QueryResult::fromResponse($response);
         }
 
@@ -34,7 +32,7 @@ class SelectResource extends Resource
      * @param string $baseUrl
      * @return string
      */
-    protected function url($baseUrl)
+    protected function url($baseUrl): string
     {
         return $baseUrl . 'secure/v1/select';
     }

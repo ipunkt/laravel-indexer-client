@@ -22,12 +22,12 @@ class SelectQuery
     /**
      * @var array
      */
-    private $fields = array();
+    private $fields = [];
 
     /**
      * @var array
      */
-    private $sort = array();
+    private $sort = [];
 
     /**
      * sets query "*:*" for example (field:value)
@@ -115,7 +115,7 @@ class SelectQuery
      */
     public function toArray()
     {
-        $result = array();
+        $result = [];
         if ($this->query !== null) {
             $result['query'] = $this->query;
         }

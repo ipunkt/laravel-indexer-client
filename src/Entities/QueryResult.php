@@ -2,7 +2,7 @@
 
 namespace Ipunkt\LaravelIndexer\Client\Entities;
 
-use Guzzle\Http\Message\Response;
+use Rokde\HttpClient\Response;
 
 class QueryResult
 {
@@ -26,7 +26,7 @@ class QueryResult
      * @param array $data
      * @param array $meta
      */
-    public function __construct(array $data, array $meta = array())
+    public function __construct(array $data, array $meta = [])
     {
         $this->data = $data;
 
@@ -75,15 +75,14 @@ class QueryResult
      *
      * @param Response $response
      * @return static
-     * @throws \Guzzle\Common\Exception\RuntimeException
      */
     public static function fromResponse(Response $response)
     {
         $data = $response->json();
 
         return new static(
-            array_get($data, 'data', array()),
-            array_get($data, 'meta', array())
+            array_get($data, 'data', []),
+            array_get($data, 'meta', [])
         );
     }
 }
