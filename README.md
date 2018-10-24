@@ -10,3 +10,4 @@ A php client for the laravel-indexer-service
 composer require ipunkt/laravel-indexer-client
 ```
 
+If you need a < php7 release use the 1.* version.
