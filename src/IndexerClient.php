@@ -2,9 +2,9 @@
 
 namespace Ipunkt\LaravelIndexer\Client;
 
-use Guzzle\Http\ClientInterface;
 use Ipunkt\LaravelIndexer\Client\Resources\IndexResource;
 use Ipunkt\LaravelIndexer\Client\Resources\SelectResource;
+use Rokde\HttpClient\Client;
 
 class IndexerClient
 {
@@ -14,7 +14,7 @@ class IndexerClient
     private $host;
 
     /**
-     * @var ClientInterface
+     * @var \Rokde\HttpClient\Client
      */
     private $client;
 
@@ -36,13 +36,12 @@ class IndexerClient
     /**
      * IndexerClient constructor.
      * @param string $host
-     * @param ClientInterface $client
+     * @param \Rokde\HttpClient\Client $client
      * @param string $token
      */
-    public function __construct($host, ClientInterface $client, $token)
+    public function __construct($host, Client $client, $token)
     {
         $this->client = $client;
-        $this->client->setBaseUrl($host);
 
         $this->host = rtrim($host, '/') . '/';
 
@@ -109,7 +108,7 @@ class IndexerClient
     /**
      * returns client
      *
-     * @return ClientInterface
+     * @return \Rokde\HttpClient\Client
      */
     protected function client()
     {
