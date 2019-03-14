@@ -20,6 +20,9 @@ abstract class Resource
     /** @var callable|null */
     private $requestPreparation;
 
+    /** @var int */
+    private $maxtries = 1;
+
     /**
      * Resource constructor.
      * @param \Rokde\HttpClient\Client $client
@@ -48,6 +51,13 @@ abstract class Resource
         return $this;
     }
 
+    public function setMaxTries($tries): self
+    {
+        $this->maxtries = max($tries + 0, 1);
+
+        return $this;
+    }
+
     /**
      * returns full url for resource
      *
@@ -70,7 +80,24 @@ abstract class Resource
 
     protected function sendRequest(Request $request): Response
     {
-        $response = $this->client->send($request);
+        $tries = max(1, $this->maxtries + 0);
+        $response = null;
+        $lastException = null;
+
+        do {
+            try {
+                $response = $this->client->send($request);
+                break;
+            } catch (\Exception $exception) {
+                $tries--;
+                sleep($request->timeout());
+                $lastException = $exception;
+            }
+        } while ($tries >= 0);
+
+        if (!$response instanceof Response) {
+            throw $lastException ?: new \RuntimeException('No sending possible');
+        }
 
         return $response;
     }

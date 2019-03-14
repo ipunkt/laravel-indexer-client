@@ -26,6 +26,9 @@ class IndexerClient
     /** @var callable|null */
     private $requestPreparation;
 
+    /** @var int */
+    private $maxtries = 1;
+
     /**
      * IndexerClient constructor.
      * @param string $host
@@ -52,6 +55,13 @@ class IndexerClient
     public function prepareRequest($callback = null): self
     {
         $this->requestPreparation = $callback;
+
+        return $this;
+    }
+
+    public function setMaxTries($tries): self
+    {
+        $this->maxtries = max($tries + 0, 1);
 
         return $this;
     }
@@ -96,7 +106,8 @@ class IndexerClient
             $this->indexResource = new IndexResource($this->client(), $this->host, $this->headers);
         }
 
-        return $this->indexResource->prepareRequest($this->requestPreparation);
+        return $this->indexResource->prepareRequest($this->requestPreparation)
+            ->setMaxTries($this->maxtries);
     }
 
     /**
@@ -110,7 +121,8 @@ class IndexerClient
             $this->selectResource = new SelectResource($this->client(), $this->host, $this->headers);
         }
 
-        return $this->selectResource->prepareRequest($this->requestPreparation);
+        return $this->selectResource->prepareRequest($this->requestPreparation)
+            ->setMaxTries($this->maxtries);
     }
 
     /**
