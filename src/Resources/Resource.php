@@ -17,6 +17,9 @@ abstract class Resource
     /** @var array */
     private $headers;
 
+    /** @var callable|null */
+    private $requestPreparation;
+
     /**
      * Resource constructor.
      * @param \Rokde\HttpClient\Client $client
@@ -31,12 +34,46 @@ abstract class Resource
     }
 
     /**
+     * define a preparation request callback
+     *
+     * Signature: callback(\Rokde\HttpClient\Request $request): void
+     *
+     * @param callable|null $callback
+     * @return \Ipunkt\LaravelIndexer\Client\Resources\Resource
+     */
+    public function prepareRequest($callback): self
+    {
+        $this->requestPreparation = $callback;
+
+        return $this;
+    }
+
+    /**
      * returns full url for resource
      *
      * @param string $baseUrl
      * @return string
      */
     abstract protected function url($baseUrl): string;
+
+    protected function makeRequest($url, $method, array $headers = []): Request
+    {
+        $request = new Request($url, $method, $this->prepareHeaders($headers));
+
+        $callback = $this->requestPreparation;
+        if ($callback !== null) {
+            $callback($request);
+        }
+
+        return $request;
+    }
+
+    protected function sendRequest(Request $request): Response
+    {
+        $response = $this->client->send($request);
+
+        return $response;
+    }
 
     /**
      * returns an resource index via get
@@ -52,13 +89,9 @@ abstract class Resource
             $queryString = '?' . $queryString;
         }
 
-        $request = new Request(
-            $this->url($this->baseUrl) . $queryString,
-            'GET',
-            $this->prepareHeaders($headers)
-        );
+        $request = $this->makeRequest($this->url($this->baseUrl) . $queryString, 'GET', $headers);
 
-        return $this->client->send($request);
+        return $this->sendRequest($request);
     }
 
     /**
@@ -70,14 +103,10 @@ abstract class Resource
      */
     protected function _post($data, array $headers = []): Response
     {
-        $request = new Request(
-            $this->url($this->baseUrl),
-            'POST',
-            $this->prepareHeaders($headers)
-        );
+        $request = $this->makeRequest($this->url($this->baseUrl), 'POST', $headers);
         $request->setBody($this->prepareBody($data));
 
-        return $this->client->send($request);
+        return $this->sendRequest($request);
     }
 
     /**
@@ -89,13 +118,9 @@ abstract class Resource
      */
     protected function _delete($id, array $headers = []): Response
     {
-        $request = new Request(
-            $this->url($this->baseUrl) . '/' . $id,
-            'DELETE',
-            $this->prepareHeaders($headers)
-        );
+        $request = $this->makeRequest($this->url($this->baseUrl) . '/' . $id, 'DELETE', $headers);
 
-        return $this->client->send($request);
+        return $this->sendRequest($request);
     }
 
     /**
@@ -107,14 +132,10 @@ abstract class Resource
      */
     protected function _deleteWithQuery($query, array $headers = []): Response
     {
-        $request = new Request(
-            $this->url($this->baseUrl) . '/-',
-            'DELETE',
-            $this->prepareHeaders($headers)
-        );
+        $request = $this->makeRequest($this->url($this->baseUrl) . '/-', 'DELETE', $headers);
         $request->setBody($this->prepareBody(['query' => $query]));
 
-        return $this->client->send($request);
+        return $this->sendRequest($request);
     }
 
     /**

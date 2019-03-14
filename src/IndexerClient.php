@@ -23,6 +23,9 @@ class IndexerClient
     /** @var SelectResource */
     private $selectResource = null;
 
+    /** @var callable|null */
+    private $requestPreparation;
+
     /**
      * IndexerClient constructor.
      * @param string $host
@@ -36,6 +39,21 @@ class IndexerClient
         $this->host = rtrim($host, '/') . '/';
 
         $this->setSecretToken($token);
+    }
+
+    /**
+     * define a preparation request callback
+     *
+     * Signature: callback(\Rokde\HttpClient\Request $request): void
+     *
+     * @param callable|null $callback
+     * @return \Ipunkt\LaravelIndexer\Client\IndexerClient
+     */
+    public function prepareRequest($callback = null): self
+    {
+        $this->requestPreparation = $callback;
+
+        return $this;
     }
 
     /**
@@ -78,7 +96,7 @@ class IndexerClient
             $this->indexResource = new IndexResource($this->client(), $this->host, $this->headers);
         }
 
-        return $this->indexResource;
+        return $this->indexResource->prepareRequest($this->requestPreparation);
     }
 
     /**
@@ -92,7 +110,7 @@ class IndexerClient
             $this->selectResource = new SelectResource($this->client(), $this->host, $this->headers);
         }
 
-        return $this->selectResource;
+        return $this->selectResource->prepareRequest($this->requestPreparation);
     }
 
     /**
