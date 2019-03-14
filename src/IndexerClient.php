@@ -8,29 +8,19 @@ use Rokde\HttpClient\Client;
 
 class IndexerClient
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $host;
 
-    /**
-     * @var \Rokde\HttpClient\Client
-     */
+    /** @var \Rokde\HttpClient\Client */
     private $client;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $headers = [];
 
-    /**
-     * @var IndexResource
-     */
+    /** @var IndexResource */
     private $indexResource = null;
 
-    /**
-     * @var SelectResource
-     */
+    /** @var SelectResource */
     private $selectResource = null;
 
     /**
