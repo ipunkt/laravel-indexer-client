@@ -8,17 +8,13 @@ use Rokde\HttpClient\Response;
 
 abstract class Resource
 {
-    /**
-     * @var \Rokde\HttpClient\Client
-     */
+    /** @var \Rokde\HttpClient\Client */
     private $client;
-    /**
-     * @var string
-     */
+
+    /** @var string */
     private $baseUrl;
-    /**
-     * @var array
-     */
+
+    /** @var array */
     private $headers;
 
     /**
@@ -136,7 +132,7 @@ abstract class Resource
                 'id' => $id,
                 'type' => $type,
                 'attributes' => $data,
-            ]
+            ],
         ];
     }
 
