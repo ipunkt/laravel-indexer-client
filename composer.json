@@ -1,25 +1,30 @@
 {
-	"name": "ipunkt/laravel-indexer-client",
-	"description": "A php client for the laravel-indexer-service",
-	"type": "library",
-	"require": {
-		"php": ">=7.0",
-		"rokde/http-client": "^1.0"
-	},
-	"autoload": {
-		"psr-4": {
-			"Ipunkt\\LaravelIndexer\\Client\\": "src/"
-		},
-		"files": [
-			"src/helpers.php"
-		]
-	},
-	"license": "MIT",
-	"authors": [
-		{
-			"name": "Robert Kummer",
-			"email": "rok@ipunkt.biz"
-		}
-	],
-	"minimum-stability": "stable"
+  "name": "ipunkt/laravel-indexer-client",
+  "description": "A php client for the laravel-indexer-service",
+  "type": "library",
+  "require": {
+    "php": ">=7.0",
+    "rokde/http-client": "^1.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Ipunkt\\LaravelIndexer\\Client\\": "src/"
+    },
+    "files": [
+      "src/helpers.php"
+    ]
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Robert Kummer",
+      "email": "rok@ipunkt.biz"
+    }
+  ],
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "optimize-autoloader": true
+  },
+  "minimum-stability": "stable"
 }
